@@ -1,6 +1,6 @@
-[results.txt](https://github.com/user-attachments/files/17430016/results.txt)# Image Text Extraction using OpenCV and Tesseract OCR
-﻿
-This repository contains Python scripts that utilize OpenCV for image preprocessing and Tesseract OCR for extracting text from images. The scripts handle various preprocessing techniques like grayscale conversion, noise removal, thresholding, dilation, erosion, and deskewing to enhance the OCR results.
+# READ ME
+
+This repository contains Python scripts that utilize OpenCV for image preprocessing and Tesseract OCR for extracting text from images. The scripts handle various preprocessing techniques like grayscale conversion, noise removal, thresholding, dilation, erosion, and deskewing to enhance the OCR results. In the files, 1.jpg is the Example Image; cv1.py is the Python code file for identifying, preprocessing text and adding boxes to the text; 1.py is the Python code file for extracting text and import it into a txt file.
 ﻿
 ## Requirements
 ﻿
