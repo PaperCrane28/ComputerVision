@@ -1,0 +1,61 @@
+Table 1. Meaning of each attribute in the dataset
+
+Attribute
+¡®CUSTOMER_ID
+
+¡®An identifier for a customer
+
+DATE_OF BIRTH
+
+Date of birth
+
+MOU_MEAN ¡®Mean number of monthly minutes of use (Numeric)
+TOTMRC_M ¡®Mean total monthly recurring charge (Numeric)
+
+ROAM MEA ¡®Mean number of roaming calls (Numeric)
+
+REV_RANG Range of revenue (Numeric)
+
+MOU_RANG Range of number of minutes of use (Numeric)
+
+TOTMRC _R Range of total monthly recurring charge (Numeric)
+
+VCEOVR_R Range of revenue of voice overage (Numeric)
+
+ROAM_RAN Range of number of roaming calls (Numeric)
+
+CHANGE_M Percentage change in monthly minutes of use vs previous three month average (Numeric)
+CHANGE R Percentage change in monthly revenue vs previous three month average(Numeric)
+DROP_VCE ¡®Mean number of dropped (failed) voice calls (Numeric)
+
+BLCK_VCE Mean number of blocked (failed) voice calls (Numeric)
+
+IWYLIS_V ¡®Mean number of inbound wireless to wireless voice calls (Numeric)
+
+PEAK_VCE ¡®Mean number of inbound and outbound peak voice calls (Numeric)
+
+ANNUAL_INCOME
+
+¡®Annual income(Numeric)
+
+v70 Pre-processed variables (Numeric)
+via Pre-processed variables (Numeric)
+
+vs Pre-processed variables (Numeric)
+
+82 Pre-processed variables (Numeric)
+
+v90 Pre-processed variables (Numeric)
+
+MONTHS Total number of months in service (Numeric)
+
+UNIQSUBS ¡®Number of unique subscribers for the customer account (Numeric)
+ACTVSUBS Number of active subscribers for the customer account (Numeric)
+chum Class label, binary variable representing whether a customer churns
+profit Benefit : ifthe customer chums, the value is > -0.1 (Numeric)
+
+¡®Age
+
+¡®Age of the consumer
+
+
