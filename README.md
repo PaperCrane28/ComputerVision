@@ -1,34 +1,186 @@
-#计算机视觉分配1
-##使用OpenCV和Tesseract OCR提取图像文本
-这个存储库包含Python脚本，这些脚本利用OpenCV进行图像预处理，利用Tesseract OCR从图像中提取文本。这些脚本处理各种预处理技术，如灰度转换、噪声消除、阈值处理、膨胀、腐蚀和去歪斜，以增强OCR结果。
-##要求
--Python 3.x
--OpenCV
--宇宙魔方
--NumPy
+[results.txt](https://github.com/user-attachments/files/17430016/results.txt)# Image Text Extraction using OpenCV and Tesseract OCR
 ﻿
-##装置
+This repository contains Python scripts that utilize OpenCV for image preprocessing and Tesseract OCR for extracting text from images. The scripts handle various preprocessing techniques like grayscale conversion, noise removal, thresholding, dilation, erosion, and deskewing to enhance the OCR results.
 ﻿
-1.安装所需的软件包:
-   
-```嘘
-pip安装opencv-python pytesseract numpy
+## Requirements
+﻿
+- Python 3.x
+- OpenCV
+- Pytesseract
+- NumPy
+﻿
+## Installation
+
+ 1. Clone the repository:
+```sh
+git clone https://github.com/PaperCrane28/ImageTextExtraction.git
+cd ImageTextExtraction
 ```
-﻿
-2.安装宇宙魔方OCR:
-- **Windows操作系统**:从以下网站下载安装程序[UB曼海姆的宇宙魔方](https://github.com/UB-Mannheim/tesseract/wiki).
+
+2. Install the required packages:
+```sh
+pip install opencv-python pytesseract numpy
+```
+![1](https://github.com/user-attachments/assets/aeddd4f1-4944-4da9-aff8-5d10aaa61c15)
 
 ﻿
-##使用
+3. Install Tesseract OCR:
+- **Windows**: Download the installer from [Tesseract at UB Mannheim](https://github.com/UB-Mannheim/tesseract/wiki).
+
+## Usage
 ﻿
-###预处理和OCR
+### Preprocessing and OCR
 ﻿
-该代码包括各种图像预处理功能，以提高OCR准确性:
+The code includes various image preprocessing functions to improve OCR accuracy:
 ﻿
--灰度转换
--噪声消除
--阈值处理
--扩张
--侵蚀
--去歪斜
--Canny边缘检测
+- Grayscale conversion
+- Thresholding
+- Erosion
+- Deskewing
+- Canny edge detection
+
+Sample script to preprocess the image and extract text:
+```python
+import cv2
+import numpy as np
+import pytesseract
+from pytesseract import Output
+﻿
+img = cv2.imread('1.jpg')
+﻿
+# Preprocessing functions
+def get_grayscale(image):
+return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+﻿
+def thresholding(image):
+return cv2.threshold(image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+﻿
+def erode(image):
+kernel = np.ones((5,5),np.uint8)
+return cv2.erode(image, kernel, iterations = 1)
+﻿
+def opening(image):
+kernel = np.ones((5,5),np.uint8)
+return cv2.morphologyEx(image, cv2.MORPH_OPEN, kernel)
+﻿
+def canny(image):
+return cv2.Canny(image, 100, 200)
+﻿
+def deskew(image):
+coords = np.column_stack(np.where(image > 0))
+angle = cv2.minAreaRect(coords)[-1]
+if angle < -45:
+angle = -(90 + angle)
+else:
+angle = -angle
+(h, w) = image.shape[:2]
+center = (w // 2, h // 2)
+M = cv2.getRotationMatrix2D(center, angle, 1.0)
+rotated = cv2.warpAffine(image, M, (w, h), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
+return rotated
+﻿
+image = cv2.imread('1.jpg')
+﻿
+gray = get_grayscale(image)
+thresh = thresholding(gray)
+opening = opening(gray)
+deskew = deskew(gray)
+canny = canny(gray)
+erode = erode(gray)
+﻿
+# OCR with Tesseract
+custom_config = r'--oem 1 --psm 6'
+print(pytesseract.image_to_string(gray, config=custom_config))
+print(pytesseract.image_to_string(thresh, config=custom_config))
+print(pytesseract.image_to_string(opening, config=custom_config))
+print(pytesseract.image_to_string(canny, config=custom_config))
+print(pytesseract.image_to_string(deskew, config=custom_config))
+```
+﻿
+### Recognize Text and Add Boxes
+﻿
+The script also includes functionality to draw bounding boxes around recognized text:
+﻿
+```python
+d = pytesseract.image_to_data(img, output_type=Output.DICT)
+print(d.keys())
+﻿
+boxes = pytesseract.image_to_boxes(img)
+h, w, c = img.shape
+for b in boxes.splitlines():
+b = b.split(' ')
+img = cv2.rectangle(img, (int(b[1]), h - int(b[2])), (int(b[3]), h - int(b[4])), (0, 255, 0), 1)
+﻿
+n_boxes = len(d['text'])
+for i in range(n_boxes):
+if int(d['conf'][i]) > 50:
+(x, y, w, h) = (d['left'][i], d['top'][i], d['width'][i], d['height'][i])
+img = cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 1)
+﻿
+cv2.imshow('boxes', img)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+```
+﻿
+### Reading Text from Image and Saving to File
+﻿
+This script reads text from an image and outputs the found text to a text file:
+﻿
+```python
+import cv2
+import pytesseract
+﻿
+def read_text_from_image(image):
+"""Reads text from an image file and outputs found text to text file"""
+gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+ret, thresh = cv2.threshold(gray_image, 0, 255, cv2.THRESH_OTSU | cv2.THRESH_BINARY_INV)
+rect_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (18, 18))
+dilation = cv2.dilate(thresh, rect_kernel, iterations = 1)
+contours, hierachy = cv2.findContours(dilation, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+image_copy = image.copy()
+﻿
+for contour in contours:
+x, y, w, h = cv2.boundingRect(contour)
+cropped = image_copy[y : y + h, x : x + w]
+file = open("results.txt", "a")
+text = pytesseract.image_to_string(cropped)
+file.write(text)
+file.write("\n")
+file.close()
+﻿
+image = cv2.imread("1.jpg")
+read_text_from_image(image)
+cv2.imshow('image', image)
+f = open("results.txt", "r")
+lines = f.readlines()
+lines.reverse()
+for line in lines:
+print(line)
+f.close()
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+```
+## Results
+### Example
+ 
+ Original Image:
+ 
+ ![1](https://github.com/user-attachments/assets/6dae8c17-4505-4a02-a9b2-8b19a675204e)
+ 
+ Display window after image processing：
+ 
+ ![gray](https://github.com/user-attachments/assets/d122146e-1175-4a12-83e1-e43c21263dd4)
+![thresh](https://github.com/user-attachments/assets/e9b1698a-ab78-4f97-83f2-5ca5c885ae48)
+![opening](https://github.com/user-attachments/assets/39a42bd3-e9d4-4cac-8077-10a2fa692a3e)
+![deskew](https://github.com/user-attachments/assets/d0ed33c3-5ce5-4615-9d17-79d86c70ebf0)
+![canny](https://github.com/user-attachments/assets/ae2d167c-3944-4120-a5eb-dee9adcb9992)
+![erode](https://github.com/user-attachments/assets/66d04839-0026-4156-93ab-ab2db3d3f64a)
+![box](https://github.com/user-attachments/assets/5545766b-2dfa-4e4b-bffd-2807b5e3d643)
+![boxes](https://github.com/user-attachments/assets/53a9ba89-d364-4ad1-99dc-bdec33ff3ae8)
+
+The extracted text is saved in `results.txt`. You can open and read the file to view the text extracted from the image.
+﻿
+## License
+﻿
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+```
