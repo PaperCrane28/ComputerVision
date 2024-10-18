@@ -13,8 +13,7 @@ This repository contains Python scripts that utilize OpenCV for image preprocess
 
  1. Clone the repository:
 ```sh
-git clone https://github.com/PaperCrane28/ComputerVision
-cd ImageTextExtraction
+git clone https://github.com/PaperCrane28/ComputerVision cd ImageTextExtraction Files
 ```
 
 2. Install the required packages:
