@@ -224,7 +224,6 @@ cv2.destroyAllWindows()
 
 The extracted text is saved in `results.txt`. You can open and read the file to view the text extracted from the image.
 ﻿
-## License
-﻿
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-```
+## Reference
+
+https://colab.research.google.com/github/r3gm/InsightSolver-Colab/blob/main/OCR_with_Pytesseract_and_OpenCV.ipynb#scrollTo=7I0wf49NTSoW
